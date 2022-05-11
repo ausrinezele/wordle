@@ -1,7 +1,9 @@
+#pragma once
+
 #include <wx/wx.h>
 #include <wx/menu.h>
 #include <wx/event.h>
-#include "panels.h"
+//#include "panels.h"
 #include "rules.h"
 #include "leaderboard.h"
 
