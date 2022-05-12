@@ -142,5 +142,5 @@ void Game::OnRules(wxCommandEvent& WXUNUSED(event))
 //--------------guess_button------------------------------- reik keist obvs
 void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
 {
-    Close(true);
+     std::string word = display->GetValue().ToStdString();//paima stringa (patikrinau veikia:DD)
 }
