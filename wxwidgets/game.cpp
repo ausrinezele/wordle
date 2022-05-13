@@ -32,75 +32,77 @@ Game::Game(const wxString& title)
     display = new wxTextCtrl(this, -1, wxT(""), wxPoint(-1, -1),
         wxSize(-1, -1), wxTE_RIGHT);
     sizer->Add(display, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
-    gs = new wxGridSizer(7, 5, 2,2);
-//                      word 1
-    wxPanel* letterbox11 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox11, 0, wxEXPAND);
-    wxPanel* letterbox12 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox12, 0, wxEXPAND);
-    wxPanel* letterbox13 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox13, 0, wxEXPAND);
-    wxPanel* letterbox14 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox14, 0, wxEXPAND);
-    wxPanel* letterbox15 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox15, 0, wxEXPAND); 
-//                      word 2
-    wxPanel* letterbox21 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox21, 0, wxEXPAND);
-    wxPanel* letterbox22 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox22, 0, wxEXPAND);
-    wxPanel* letterbox23 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox23, 0, wxEXPAND);
-    wxPanel* letterbox24 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox24, 0, wxEXPAND);
-    wxPanel* letterbox25 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox25, 0, wxEXPAND);
-//                      word 3
-    wxPanel* letterbox31 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox31, 0, wxEXPAND);
-    wxPanel* letterbox32 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox32, 0, wxEXPAND);
-    wxPanel* letterbox33 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox33, 0, wxEXPAND);
-    wxPanel* letterbox34 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox34, 0, wxEXPAND);
-    wxPanel* letterbox35 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox35, 0, wxEXPAND);
-
-//                      word 4
-    wxPanel* letterbox41 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox41, 0, wxEXPAND);
-    wxPanel* letterbox42 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox42, 0, wxEXPAND);
-    wxPanel* letterbox43 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox43, 0, wxEXPAND);
-    wxPanel* letterbox44 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox44, 0, wxEXPAND);
-    wxPanel* letterbox45 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox45, 0, wxEXPAND);
-//                      word 5
-    wxPanel* letterbox51 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox51, 0, wxEXPAND);
-    wxPanel* letterbox52 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox52, 0, wxEXPAND);
-    wxPanel* letterbox53 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox53, 0, wxEXPAND);
-    wxPanel* letterbox54 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox54, 0, wxEXPAND);
-    wxPanel* letterbox55 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox55, 0, wxEXPAND);
-//                      word 6
-    wxPanel* letterbox61 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox61, 0, wxEXPAND);
-    wxPanel* letterbox62 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox62, 0, wxEXPAND);
-    wxPanel* letterbox63 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox63, 0, wxEXPAND);
-    wxPanel* letterbox64 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox64, 0, wxEXPAND);
-    wxPanel* letterbox65 = new wxPanel(this, wxID_ANY);
-    gs->Add(letterbox65, 0, wxEXPAND);
-//                      guess button
+    wxGridSizer* gs = new wxGridSizer(7, 5, 2,2);
+////                      word 1
+    for (int i = 1; i <= 30; i++)
+    gs->Add(new wxPanel(this,i),0,wxEXPAND); // bus reikalingi man atrodo id tai del to priskiriu su i, nes man atrodo pagal juos galesi deliot ir nereiks kiekvienam skirtingo letterbox
+//    wxPanel* letterbox11 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox11, 0, wxEXPAND);
+//    wxPanel* letterbox12 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox12, 0, wxEXPAND);
+//    wxPanel* letterbox13 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox13, 0, wxEXPAND);
+//    wxPanel* letterbox14 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox14, 0, wxEXPAND);
+//    wxPanel* letterbox15 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox15, 0, wxEXPAND); 
+////                      word 2
+//    wxPanel* letterbox21 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox21, 0, wxEXPAND);
+//    wxPanel* letterbox22 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox22, 0, wxEXPAND);
+//    wxPanel* letterbox23 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox23, 0, wxEXPAND);
+//    wxPanel* letterbox24 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox24, 0, wxEXPAND);
+//    wxPanel* letterbox25 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox25, 0, wxEXPAND);
+////                      word 3
+//    wxPanel* letterbox31 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox31, 0, wxEXPAND);
+//    wxPanel* letterbox32 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox32, 0, wxEXPAND);
+//    wxPanel* letterbox33 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox33, 0, wxEXPAND);
+//    wxPanel* letterbox34 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox34, 0, wxEXPAND);
+//    wxPanel* letterbox35 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox35, 0, wxEXPAND);
+//
+////                      word 4
+//    wxPanel* letterbox41 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox41, 0, wxEXPAND);
+//    wxPanel* letterbox42 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox42, 0, wxEXPAND);
+//    wxPanel* letterbox43 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox43, 0, wxEXPAND);
+//    wxPanel* letterbox44 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox44, 0, wxEXPAND);
+//    wxPanel* letterbox45 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox45, 0, wxEXPAND);
+////                      word 5
+//    wxPanel* letterbox51 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox51, 0, wxEXPAND);
+//    wxPanel* letterbox52 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox52, 0, wxEXPAND);
+//    wxPanel* letterbox53 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox53, 0, wxEXPAND);
+//    wxPanel* letterbox54 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox54, 0, wxEXPAND);
+//    wxPanel* letterbox55 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox55, 0, wxEXPAND);
+////                      word 6
+//    wxPanel* letterbox61 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox61, 0, wxEXPAND);
+//    wxPanel* letterbox62 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox62, 0, wxEXPAND);
+//    wxPanel* letterbox63 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox63, 0, wxEXPAND);
+//    wxPanel* letterbox64 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox64, 0, wxEXPAND);
+//    wxPanel* letterbox65 = new wxPanel(this, wxID_ANY);
+//    gs->Add(letterbox65, 0, wxEXPAND);
+////                      guess button
     wxButton* buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"));
     Connect(wxID_APPLY, wxEVT_COMMAND_BUTTON_CLICKED,
         wxCommandEventHandler(Game::OnGuess));
