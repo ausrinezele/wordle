@@ -2,15 +2,15 @@
 
 const int lettersInWord = 5;
 const int guessCount = 6;
+int guessNumber = 1;
 
-Game::Game(const wxString& title)
-    : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(240, 390))
+Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(240, 390))
 {
     //SetIcon(wxIcon(wxT("web.xpm")));
 //----------menu items------------------------------------
     wxMenuBar *menubar = new wxMenuBar;
     wxMenu* file = new wxMenu;
-    acc = new wxMenu;
+    wxMenu* acc = new wxMenu;
     
     acc->Append(wxID_FIRST, wxT("Register"));
     acc->Append(wxID_LAST, wxT("Login"));
@@ -23,18 +23,12 @@ Game::Game(const wxString& title)
     menubar->Append(file, wxT("&File"));
     SetMenuBar(menubar);
 
-    Connect(wxID_INFO, wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Game::OnRules));
-    Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Game::OnLeaderboard));
-    Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Game::OnQuit));
-    Connect(wxID_FIRST, wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Game::OnReg));
-    Connect(wxID_LAST, wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Game::OnLog));
-    Connect(wxID_FLOPPY, wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Game::OnScore));
+    Connect(wxID_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnRules));
+    Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLeaderboard));
+    Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnQuit));
+    Connect(wxID_FIRST, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnReg));
+    Connect(wxID_LAST, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLog));
+    Connect(wxID_FLOPPY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnScore));
 
 //-----------------------grid---------------------------------
     wxColour black, green, yellow;
@@ -43,13 +37,16 @@ Game::Game(const wxString& title)
     yellow.Set(wxT("#e6d822"));
 
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-    wxTextCtrl* display = new wxTextCtrl(this, -1, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_RIGHT);
+    wxTextCtrl* display = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_RIGHT);
     sizer->Add(display, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
     wxGridSizer* gs = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
 ////                      word 1
-    for (int i = 0; i < guessCount*lettersInWord; i++)
+    for (int i = 0; i < guessCount * lettersInWord; i++) {
     gs->Add(new wxStaticText(this,i,"a",wxPoint(0,0),wxSize(0,0), wxALIGN_CENTRE_HORIZONTAL), 0, wxEXPAND); // bus reikalingi man atrodo id tai del to priskiriu su i, nes man atrodo pagal juos galesi deliot ir nereiks kiekvienam skirtingo letterbox
-    
+    wxWindow* window = FindWindowById(i);
+    window->SetBackgroundColour(green);
+    window->Refresh();
+    }
     int guessNumber = 1;
     std::string name = "ABCDE";
     
@@ -73,7 +70,6 @@ Game::Game(const wxString& title)
 
 //---------------------------------------------------------
     Centre();
-
 }
 
 //----------menu items--------------------------------- galimai reikės dar kažką pridėti
@@ -112,7 +108,20 @@ void Game::OnScore(wxCommandEvent& WXUNUSED(event))
     sr->Destroy();
 }
 //--------------guess_button------------------------------- reik keist obvs
-void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
+void Game::OnGuess(wxCommandEvent& e)
 {
+   wxWindow* window = FindWindowById(e.GetId());            //cia pasirodo gauni mygtuko id o ne display lauko, reik kazkaip papassint dar viena parametra i funcija
+   wxTextCtrl* word = wxDynamicCast(window, wxTextCtrl);
+   if (!word) {
+       wxMessageBox(std::to_string(e.GetId()));
+       wxMessageBox("word is null");
+       return;
+   }
+   std::string strWord = word->GetValue().ToStdString();
+   for (int i = 0 * guessNumber; i < lettersInWord * guessNumber; i++) {
+       FindWindowById(i)->SetLabel(strWord[i]);
+    }
+    guessNumber++;
+
      //std::string word = display->GetValue().ToStdString();//paima stringa (patikrinau veikia:DD)
 }
