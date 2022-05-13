@@ -10,7 +10,13 @@ Game::Game(const wxString& title)
 //----------menu items------------------------------------
     wxMenuBar *menubar = new wxMenuBar;
     wxMenu* file = new wxMenu;
-
+    acc = new wxMenu;
+    
+    acc->Append(wxID_FIRST, wxT("Register"));
+    acc->Append(wxID_LAST, wxT("Login"));
+    acc->Append(wxID_FLOPPY, wxT("Check score"));
+    file->AppendSubMenu(acc, wxT("Account"));
+        
     file->Append(wxID_INFO, wxT("Rules"));
     file->Append(wxID_ABOUT, wxT("Leaderboard"));
     file->Append(wxID_EXIT, wxT("&Quit"));
@@ -23,6 +29,12 @@ Game::Game(const wxString& title)
         wxCommandEventHandler(Game::OnLeaderboard));
     Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED,
         wxCommandEventHandler(Game::OnQuit));
+    Connect(wxID_FIRST, wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(Game::OnReg));
+    Connect(wxID_LAST, wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(Game::OnLog));
+    Connect(wxID_FLOPPY, wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(Game::OnScore));
 
 //-----------------------grid---------------------------------
     wxColour black, green, yellow;
@@ -80,6 +92,24 @@ void Game::OnRules(wxCommandEvent& WXUNUSED(event))
     Rules* sp = new Rules(wxT("The Game rules"));
     sp->ShowModal();
     sp->Destroy();
+}
+void Game::OnReg(wxCommandEvent& WXUNUSED(event))
+{
+    Register* sr = new Register(wxT("Register"));
+    sr->ShowModal();
+    sr->Destroy();
+}
+void Game::OnLog(wxCommandEvent& WXUNUSED(event))
+{
+    Login* sr = new Login(wxT("Login"));
+    sr->ShowModal();
+    sr->Destroy();
+}
+void Game::OnScore(wxCommandEvent& WXUNUSED(event))
+{
+    Score* sr = new Score(wxT("Score"));
+    sr->ShowModal();
+    sr->Destroy();
 }
 //--------------guess_button------------------------------- reik keist obvs
 void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
