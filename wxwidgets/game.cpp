@@ -110,7 +110,7 @@ void Game::OnScore(wxCommandEvent& WXUNUSED(event))
 //--------------guess_button------------------------------- reik keist obvs
 void Game::OnGuess(wxCommandEvent& e)
 {
-   wxWindow* window = FindWindowById(e.GetId());            //cia pasirodo gauni mygtuko id o ne display lauko, reik kazkaip papassint dar viena parametra i funcija
+   wxWindow* window = FindWindowById(999);            //cia pasirodo gauni mygtuko id o ne display lauko, reik kazkaip papassint dar viena parametra i funcija
    wxTextCtrl* word = wxDynamicCast(window, wxTextCtrl);
    if (!word) {
        wxMessageBox(std::to_string(e.GetId()));
