@@ -34,7 +34,6 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     Connect(wxID_FLOPPY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnScore));
 
 //-----------------------grid---------------------------------
-    wxColour black, green, yellow, gray;
     black.Set(wxT("#333131"));
     green.Set(wxT("#43d12a"));
     yellow.Set(wxT("#e6d822"));
@@ -127,8 +126,11 @@ void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
        wxMessageBox("Correct!");
        return;
    }
+
    for (int i = lettersInWord * guessNumber; i < lettersInWord * guessNumber + lettersInWord; i++){
        FindWindowById(i)->SetLabel(strWord[i- lettersInWord * guessNumber]);
+       if (letterInPos(i - lettersInWord * guessNumber, strWord[i - lettersInWord * guessNumber])) FindWindowById(i)->SetBackgroundColour(green);
+       else if (letterExist(strWord[i - lettersInWord * guessNumber])) FindWindowById(i)->SetBackgroundColour(yellow);
     }
     guessNumber++;
     if (guessNumber >= guessCount) {
@@ -145,4 +147,13 @@ bool Game::isWord(std::string guessedWord) {
 void Game::wordGen() {
     std::uniform_int_distribution<int> dist(0, wordList.size()-1);
     corrWord = wordList[dist(mt)];
+}
+bool Game::letterInPos(int pos, char letter) {
+    if (letter == corrWord[pos]) return true;
+    return false;
+}
+bool Game::letterExist(char letter) {
+    for (int i = 0; i < corrWord.length(); i++)
+        if (letter == corrWord[i]) return true;
+    return false;
 }

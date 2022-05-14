@@ -32,6 +32,9 @@ private:
     const int guessCount = 6;
     int guessNumber = 0;
 
+    wxColour black, green, yellow, gray;
+
+
     static std::random_device rd;
     static std::mt19937 mt;
 
@@ -46,4 +49,6 @@ private:
 //--------------------------------------------
     bool isWord(std::string guessedWord);
     void wordGen();
+    bool letterInPos(int pos, char letter);
+    bool letterExist(char letter);
 };
