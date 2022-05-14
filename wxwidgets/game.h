@@ -44,6 +44,6 @@ private:
 //------------guess button--------------------
     void OnGuess(wxCommandEvent& event);
 //--------------------------------------------
-    bool CorrectWord(std::string guessedWord);
+    bool isWord(std::string guessedWord);
     void wordGen();
 };

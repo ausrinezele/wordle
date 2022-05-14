@@ -44,10 +44,10 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     sizer = new wxBoxSizer(wxVERTICAL);
     display = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_RIGHT);
     sizer->Add(display, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
-    wxGridSizer* gs = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
+    gs = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
 ////                      word 1
     for (int i = 0; i < guessCount * lettersInWord; i++) {
-    gs->Add(new wxStaticText(this,i,"a",wxPoint(0,0),wxSize(0,0), wxALIGN_CENTRE_HORIZONTAL), 0, wxEXPAND); // bus reikalingi man atrodo id tai del to priskiriu su i, nes man atrodo pagal juos galesi deliot ir nereiks kiekvienam skirtingo letterbox
+    gs->Add(new wxStaticText(this,i,"",wxPoint(0,0),wxSize(0,0), wxALIGN_CENTRE_HORIZONTAL), 0, wxEXPAND); // bus reikalingi man atrodo id tai del to priskiriu su i, nes man atrodo pagal juos galesi deliot ir nereiks kiekvienam skirtingo letterbox
     wxWindow* window = FindWindowById(i);
     window->SetBackgroundColour(gray);
     window->Refresh();
@@ -119,12 +119,25 @@ void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
        wxMessageBox("Word is to long");
        return;
    }
+   if (!isWord(strWord)) {
+       wxMessageBox("Not a word!");
+       return;
+   }
+   if (strWord == corrWord) {               //reik paendint cia
+       wxMessageBox("Correct!");
+       return;
+   }
    for (int i = lettersInWord * guessNumber; i < lettersInWord * guessNumber + lettersInWord; i++){
        FindWindowById(i)->SetLabel(strWord[i- lettersInWord * guessNumber]);
     }
     guessNumber++;
+    if (guessNumber >= guessCount) {
+        wxMessageBox("You lost!");         //cia irgi reikai endint nes pralosia
+        return;
+    }
+    gs->Show(true);
 }
-bool Game::CorrectWord(std::string guessedWord) {
+bool Game::isWord(std::string guessedWord) {
     for (int i = 0; i < wordList.size(); i++)
         if (guessedWord == wordList[i]) return true;
     return false;
