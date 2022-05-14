@@ -1,16 +1,19 @@
 ﻿#include "game.h"
+#include "wordsList.h"
 
-const int lettersInWord = 5;
-const int guessCount = 6;
-int guessNumber = 1;
+std::random_device Game::rd;
+
+std::mt19937 Game::mt(Game::rd());
 
 Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(240, 390))
 {
+    wordGen();
+    wxMessageBox(corrWord);
     //SetIcon(wxIcon(wxT("web.xpm")));
-//----------menu items------------------------------------
-    wxMenuBar *menubar = new wxMenuBar;
-    wxMenu* file = new wxMenu;
-    wxMenu* acc = new wxMenu;
+    //----------menu items------------------------------------
+    menubar = new wxMenuBar;
+    file = new wxMenu;
+    acc = new wxMenu;
     
     acc->Append(wxID_FIRST, wxT("Register"));
     acc->Append(wxID_LAST, wxT("Login"));
@@ -31,35 +34,32 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     Connect(wxID_FLOPPY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnScore));
 
 //-----------------------grid---------------------------------
-    wxColour black, green, yellow;
+    wxColour black, green, yellow, gray;
     black.Set(wxT("#333131"));
     green.Set(wxT("#43d12a"));
     yellow.Set(wxT("#e6d822"));
+    gray.Set(wxT("#DAD8CB"));
 
-    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-    wxTextCtrl* display = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_RIGHT);
+
+    sizer = new wxBoxSizer(wxVERTICAL);
+    display = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_RIGHT);
     sizer->Add(display, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
     wxGridSizer* gs = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
 ////                      word 1
     for (int i = 0; i < guessCount * lettersInWord; i++) {
     gs->Add(new wxStaticText(this,i,"a",wxPoint(0,0),wxSize(0,0), wxALIGN_CENTRE_HORIZONTAL), 0, wxEXPAND); // bus reikalingi man atrodo id tai del to priskiriu su i, nes man atrodo pagal juos galesi deliot ir nereiks kiekvienam skirtingo letterbox
     wxWindow* window = FindWindowById(i);
-    window->SetBackgroundColour(green);
+    window->SetBackgroundColour(gray);
     window->Refresh();
     }
-    int guessNumber = 1;
-    std::string name = "ABCDE";
-    
-    for (int i = 0 * guessNumber; i < lettersInWord * guessNumber; i++)
-        FindWindowById(i, this)->SetLabel(name[i]);
 //                          guess button
     wxButton* buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"));
-    Connect(wxID_APPLY, wxEVT_COMMAND_BUTTON_CLICKED,
-        wxCommandEventHandler(Game::OnGuess));
+    Connect(wxID_APPLY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Game::OnGuess));
+    Connect(wxID_APPLY, wxEVT_CHAR_HOOK, wxCommandEventHandler(Game::OnGuess));
     buttonGuess->SetFocus();
 
     gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
-    gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);   
+    gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
     gs->Add(buttonGuess, 0, wxEXPAND);
     gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
     gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
@@ -108,20 +108,28 @@ void Game::OnScore(wxCommandEvent& WXUNUSED(event))
     sr->Destroy();
 }
 //--------------guess_button------------------------------- reik keist obvs
-void Game::OnGuess(wxCommandEvent& e)
+void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
 {
-   wxWindow* window = FindWindowById(999);            //cia pasirodo gauni mygtuko id o ne display lauko, reik kazkaip papassint dar viena parametra i funcija
-   wxTextCtrl* word = wxDynamicCast(window, wxTextCtrl);
-   if (!word) {
-       wxMessageBox(std::to_string(e.GetId()));
-       wxMessageBox("word is null");
+   std::string strWord = display->GetValue().ToStdString();
+   if (strWord.length() < 5) {
+       wxMessageBox("Word is to short");
        return;
    }
-   std::string strWord = word->GetValue().ToStdString();
-   for (int i = 0 * guessNumber; i < lettersInWord * guessNumber; i++) {
-       FindWindowById(i)->SetLabel(strWord[i]);
+   if (strWord.length() > 5) {
+       wxMessageBox("Word is to long");
+       return;
+   }
+   for (int i = lettersInWord * guessNumber; i < lettersInWord * guessNumber + lettersInWord; i++){
+       FindWindowById(i)->SetLabel(strWord[i- lettersInWord * guessNumber]);
     }
     guessNumber++;
-
-     //std::string word = display->GetValue().ToStdString();//paima stringa (patikrinau veikia:DD)
+}
+bool Game::CorrectWord(std::string guessedWord) {
+    for (int i = 0; i < wordList.size(); i++)
+        if (guessedWord == wordList[i]) return true;
+    return false;
+}
+void Game::wordGen() {
+    std::uniform_int_distribution<int> dist(0, wordList.size()-1);
+    corrWord = wordList[dist(mt)];
 }

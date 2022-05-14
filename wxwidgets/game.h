@@ -9,6 +9,9 @@
 #include "login.h"
 #include "score.h"
 
+#include <random>
+
+
 class Game : public wxFrame
 {
 public:
@@ -21,9 +24,19 @@ public:
     void OnLog(wxCommandEvent& event);
     void OnScore(wxCommandEvent& event);
     
+private:
     wxMenu* acc;
     wxMenuBar* menubar;
     wxMenu* file;
+    const int lettersInWord = 5;
+    const int guessCount = 6;
+    int guessNumber = 0;
+
+    static std::random_device rd;
+    static std::mt19937 mt;
+
+
+    std::string corrWord;
 //----------------grid-----------------------    
     wxBoxSizer* sizer;
     wxGridSizer* gs;
@@ -31,5 +44,6 @@ public:
 //------------guess button--------------------
     void OnGuess(wxCommandEvent& event);
 //--------------------------------------------
-
+    bool CorrectWord(std::string guessedWord);
+    void wordGen();
 };
