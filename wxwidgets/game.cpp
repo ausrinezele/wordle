@@ -111,11 +111,11 @@ void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
 {
    std::string strWord = display->GetValue().ToStdString();
    if (strWord.length() < 5) {
-       wxMessageBox("Word is to short");
+       wxMessageBox("Word is too short");
        return;
    }
    if (strWord.length() > 5) {
-       wxMessageBox("Word is to long");
+       wxMessageBox("Word is too long");
        return;
    }
    if (!isWord(strWord)) {
