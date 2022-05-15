@@ -41,7 +41,7 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 
 
     sizer = new wxBoxSizer(wxVERTICAL);
-    display = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_RIGHT);
+    display = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
     sizer->Add(display, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
     gs = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
 ////                      word 1
