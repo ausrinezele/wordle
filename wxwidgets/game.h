@@ -8,6 +8,8 @@
 #include "register.h"
 #include "login.h"
 #include "score.h"
+#include <fstream>
+#include <vector>
 
 #include <random>
 
@@ -41,7 +43,7 @@ private:
     int score = 0;
     int maxScore = 30;
 
-
+    std::vector<std::string> wordList;
     std::string corrWord;
 //----------------grid-----------------------    
     wxBoxSizer* sizer;
@@ -51,7 +53,7 @@ private:
     void OnGuess(wxCommandEvent& event);
 //--------------------------------------------
     bool isWord(std::string guessedWord);
-    void wordGen();
+    void wordGen(std::string fvardas);
     bool letterInPos(int pos, char letter);
     bool letterExist(char letter);
 };

@@ -1,14 +1,31 @@
 ﻿#include "game.h"
-#include "wordsList.h"
 
 std::random_device Game::rd;
 
 std::mt19937 Game::mt(Game::rd());
 
+static inline void ltrim(std::string& s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+        }));
+}
+
+// trim from end (in place)
+static inline void rtrim(std::string& s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+        }).base(), s.end());
+}
+
+// trim from both ends (in place)
+static inline void trim(std::string& s) {
+    ltrim(s);
+    rtrim(s);
+}
 Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(240, 390))
 {
-    wordGen(); //sugeneruoja zodi
-    wxMessageBox(corrWord);
+    wordGen("zodziai.txt"); //sugeneruoja zodi
+    wxMessageBox(corrWord); //SPAUSDINA TEISINGA ZODI
     //SetIcon(wxIcon(wxT("web.xpm")));
     //----------menu items------------------------------------
     menubar = new wxMenuBar;
@@ -35,7 +52,7 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 
 //-----------------------grid---------------------------------
     black.Set(wxT("#333131"));
-    green.Set(wxT("#43d12a"));
+    green.Set(wxT("#008800"));
     yellow.Set(wxT("#e6d822"));
     gray.Set(wxT("#DAD8CB"));
 
@@ -137,7 +154,7 @@ void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
     }
     guessNumber++;
     if (guessNumber >= guessCount) {
-        wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints recieved : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
+        wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
         return;
     }
 }
@@ -146,7 +163,16 @@ bool Game::isWord(std::string guessedWord) {
         if (guessedWord == wordList[i]) return true;
     return false;
 }
-void Game::wordGen() {
+void Game::wordGen(std::string fvardas) {
+    std::ifstream fin(fvardas);
+    while (!fin.eof())
+    {
+        std::string temp;
+        fin >> temp;
+        trim(temp);
+        if(temp.length() != 0)
+            wordList.push_back(temp);
+    }
     std::uniform_int_distribution<int> dist(0, wordList.size()-1);
     corrWord = wordList[dist(mt)];
 }
