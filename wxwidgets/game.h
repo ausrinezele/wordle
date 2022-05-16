@@ -38,6 +38,9 @@ private:
     static std::random_device rd;
     static std::mt19937 mt;
 
+    int score = 0;
+    int maxScore = 30;
+
 
     std::string corrWord;
 //----------------grid-----------------------    

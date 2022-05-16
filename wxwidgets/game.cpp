@@ -7,7 +7,7 @@ std::mt19937 Game::mt(Game::rd());
 
 Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(240, 390))
 {
-    wordGen();
+    wordGen(); //sugeneruoja zodi
     wxMessageBox(corrWord);
     //SetIcon(wxIcon(wxT("web.xpm")));
     //----------menu items------------------------------------
@@ -54,8 +54,6 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 //                          guess button
     wxButton* buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"));
     Connect(wxID_APPLY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Game::OnGuess));
-    Connect(wxID_APPLY, wxEVT_CHAR_HOOK, wxCommandEventHandler(Game::OnGuess));
-    buttonGuess->SetFocus();
 
     gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
     gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
@@ -123,21 +121,25 @@ void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
        return;
    }
    if (strWord == corrWord) {               //reik paendint cia
-       wxMessageBox("Correct!");
+       score += (maxScore - guessNumber*5);
+       wxMessageBox("Correct! You get " + std::to_string(score) + " points!");
        return;
    }
 
    for (int i = lettersInWord * guessNumber; i < lettersInWord * guessNumber + lettersInWord; i++){
        FindWindowById(i)->SetLabel(strWord[i- lettersInWord * guessNumber]);
-       if (letterInPos(i - lettersInWord * guessNumber, strWord[i - lettersInWord * guessNumber])) FindWindowById(i)->SetBackgroundColour(green);
+       if (letterInPos(i - lettersInWord * guessNumber, strWord[i - lettersInWord * guessNumber]))
+       {
+           FindWindowById(i)->SetBackgroundColour(green);
+           if (guessNumber == 5) score++;
+       }
        else if (letterExist(strWord[i - lettersInWord * guessNumber])) FindWindowById(i)->SetBackgroundColour(yellow);
     }
     guessNumber++;
     if (guessNumber >= guessCount) {
-        wxMessageBox("You lost!");         //cia irgi reikai endint nes pralosia
+        wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints recieved : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
         return;
     }
-    gs->Show(true);
 }
 bool Game::isWord(std::string guessedWord) {
     for (int i = 0; i < wordList.size(); i++)
