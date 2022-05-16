@@ -137,7 +137,7 @@ void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
     }
     guessNumber++;
     if (guessNumber >= guessCount) {
-        wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints recieved : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
+        wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
         return;
     }
 }
