@@ -47,8 +47,9 @@ private:
     std::string corrWord;
 //----------------grid-----------------------    
     wxBoxSizer* sizer;
-    wxGridSizer* gs;
-    wxTextCtrl* display;
+    wxGridSizer* grid;
+    wxTextCtrl* inputBox;
+    wxStaticText** boxes;
 //------------guess button--------------------
     void OnGuess(wxCommandEvent& event);
 //--------------------------------------------

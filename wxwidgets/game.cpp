@@ -58,27 +58,33 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 
 
     sizer = new wxBoxSizer(wxVERTICAL);
-    display = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
-    sizer->Add(display, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
-    gs = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
+    inputBox = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
+    sizer->Add(inputBox, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
+    grid = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
 ////                      word 1
+    boxes = new wxStaticText *[lettersInWord * guessCount];
     for (int i = 0; i < guessCount * lettersInWord; i++) {
-    gs->Add(new wxStaticText(this,i,"",wxPoint(0,0),wxSize(0,0), wxALIGN_CENTRE_HORIZONTAL), 0, wxEXPAND); // bus reikalingi man atrodo id tai del to priskiriu su i, nes man atrodo pagal juos galesi deliot ir nereiks kiekvienam skirtingo letterbox
-    wxWindow* window = FindWindowById(i);
-    window->SetBackgroundColour(gray);
-    window->Refresh();
+        //wxBoxSizer* newBox = new wxBoxSizer(wxVERTICAL);
+        //newBox->Add(new wxStaticText(this, i, ""));
+
+        //grid->Add(newBox, 0, wxEXPAND);
+        boxes[i] = new wxStaticText(this, i, "", wxPoint(0, 0), wxSize(0, 0), wxALIGN_CENTRE_HORIZONTAL);
+        
+        grid->Add(boxes[i], 0, wxEXPAND); // bus reikalingi man atrodo id tai del to priskiriu su i, nes man atrodo pagal juos galesi deliot ir nereiks kiekvienam skirtingo letterbox
+        wxWindow* window = FindWindowById(i);
+        window->SetBackgroundColour(gray);
     }
 //                          guess button
     wxButton* buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"));
     Connect(wxID_APPLY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Game::OnGuess));
 
-    gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
-    gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
-    gs->Add(buttonGuess, 0, wxEXPAND);
-    gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
-    gs->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
+    grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
+    grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
+    grid->Add(buttonGuess, 0, wxEXPAND);
+    grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
+    grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
 
-    sizer->Add(gs, 1, wxEXPAND);
+    sizer->Add(grid, 1, wxEXPAND);
     SetSizer(sizer);
     SetMinSize(wxSize(220, 390));
 
@@ -122,9 +128,9 @@ void Game::OnScore(wxCommandEvent& WXUNUSED(event))
     sr->Destroy();
 }
 //--------------guess_button------------------------------- reik keist obvs
-void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
+void Game::OnGuess(wxCommandEvent& e)
 {
-   std::string strWord = display->GetValue().ToStdString();
+   std::string strWord = inputBox->GetValue().ToStdString();
    if (strWord.length() < 5) {
        wxMessageBox("Word is too short");
        return;
@@ -144,19 +150,22 @@ void Game::OnGuess(wxCommandEvent& WXUNUSED(event))
    }
 
    for (int i = lettersInWord * guessNumber; i < lettersInWord * guessNumber + lettersInWord; i++){
-       FindWindowById(i)->SetLabel(strWord[i- lettersInWord * guessNumber]);
+
+      boxes[i]->SetLabel(strWord[i - lettersInWord * guessNumber]);
        if (letterInPos(i - lettersInWord * guessNumber, strWord[i - lettersInWord * guessNumber]))
        {
-           FindWindowById(i)->SetBackgroundColour(green);
+           boxes[i]->SetBackgroundColour(green);
            if (guessNumber == 5) score++;
        }
-       else if (letterExist(strWord[i - lettersInWord * guessNumber])) FindWindowById(i)->SetBackgroundColour(yellow);
-    }
+       else if (letterExist(strWord[i - lettersInWord * guessNumber])) boxes[i]->SetBackgroundColour(yellow);
+   }
     guessNumber++;
     if (guessNumber >= guessCount) {
         wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
         return;
     }
+    grid->Layout();
+    e.Skip();
 }
 bool Game::isWord(std::string guessedWord) {
     for (int i = 0; i < wordList.size(); i++)
