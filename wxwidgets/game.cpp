@@ -62,17 +62,14 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     sizer->Add(inputBox, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
     grid = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
 ////                      word 1
+
+    wxFont font(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false); // font parameters
     boxes = new wxStaticText *[lettersInWord * guessCount];
     for (int i = 0; i < guessCount * lettersInWord; i++) {
-        //wxBoxSizer* newBox = new wxBoxSizer(wxVERTICAL);
-        //newBox->Add(new wxStaticText(this, i, ""));
-
-        //grid->Add(newBox, 0, wxEXPAND);
         boxes[i] = new wxStaticText(this, i, "", wxPoint(0, 0), wxSize(0, 0), wxALIGN_CENTRE_HORIZONTAL);
-        
-        grid->Add(boxes[i], 0, wxEXPAND); // bus reikalingi man atrodo id tai del to priskiriu su i, nes man atrodo pagal juos galesi deliot ir nereiks kiekvienam skirtingo letterbox
-        wxWindow* window = FindWindowById(i);
-        window->SetBackgroundColour(gray);
+        grid->Add(boxes[i], 0, wxEXPAND);
+        boxes[i]->SetBackgroundColour(gray);
+        boxes[i]->SetFont(font); // setting font
     }
 //                          guess button
     wxButton* buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"));
@@ -160,11 +157,11 @@ void Game::OnGuess(wxCommandEvent& e)
        else if (letterExist(strWord[i - lettersInWord * guessNumber])) boxes[i]->SetBackgroundColour(yellow);
    }
     guessNumber++;
+    grid->Layout();
     if (guessNumber >= guessCount) {
         wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
         return;
     }
-    grid->Layout();
     e.Skip();
 }
 bool Game::isWord(std::string guessedWord) {
