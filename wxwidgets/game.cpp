@@ -1,4 +1,5 @@
 ﻿#include "game.h"
+#include "sqlConnect.h"
 
 std::random_device Game::rd;
 
@@ -26,6 +27,7 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 {
     wordGen("zodziai.txt"); //sugeneruoja zodi
     wxMessageBox(corrWord); //SPAUSDINA TEISINGA ZODI
+    runConnection();
     //SetIcon(wxIcon(wxT("web.xpm")));
     //----------menu items------------------------------------
     menubar = new wxMenuBar;
@@ -140,11 +142,6 @@ void Game::OnGuess(wxCommandEvent& e)
        wxMessageBox("Not a word!");
        return;
    }
-   if (strWord == corrWord) {               //reik paendint cia
-       score += (maxScore - guessNumber*5);
-       wxMessageBox("Correct! You get " + std::to_string(score) + " points!");
-       return;
-   }
 
    for (int i = lettersInWord * guessNumber; i < lettersInWord * guessNumber + lettersInWord; i++){
 
@@ -156,8 +153,13 @@ void Game::OnGuess(wxCommandEvent& e)
        }
        else if (letterExist(strWord[i - lettersInWord * guessNumber])) boxes[i]->SetBackgroundColour(yellow);
    }
-    guessNumber++;
     grid->Layout();
+   if (strWord == corrWord) {               //reik paendint cia
+       score += (maxScore - guessNumber * 5);
+       wxMessageBox("Correct! You get " + std::to_string(score) + " points!");
+       return;
+   }
+    guessNumber++;
     if (guessNumber >= guessCount) {
         wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
         return;
