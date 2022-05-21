@@ -1,5 +1,4 @@
 ﻿#include "game.h"
-#include "sqlConnect.h"
 
 std::random_device Game::rd;
 
@@ -27,7 +26,7 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 {
     wordGen("zodziai.txt"); //sugeneruoja zodi
     wxMessageBox(corrWord); //SPAUSDINA TEISINGA ZODI
-    runConnection();
+    dataBase.runConnection();
     //SetIcon(wxIcon(wxT("web.xpm")));
     //----------menu items------------------------------------
     menubar = new wxMenuBar;

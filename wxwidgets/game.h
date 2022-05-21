@@ -12,6 +12,7 @@
 #include <vector>
 
 #include <random>
+#include "DBH.h"
 
 
 class Game : public wxFrame
@@ -27,6 +28,8 @@ public:
     void OnScore(wxCommandEvent& event);
     
 private:
+    DBH dataBase;
+
     wxMenu* acc;
     wxMenuBar* menubar;
     wxMenu* file;
