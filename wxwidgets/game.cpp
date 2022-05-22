@@ -66,14 +66,7 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     grid = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
 ////                      word 1
 
-    wxFont font(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false); // font parameters
-    boxes = new wxStaticText *[lettersInWord * guessCount];
-    for (int i = 0; i < guessCount * lettersInWord; i++) {
-        boxes[i] = new wxStaticText(this, i, "", wxPoint(0, 0), wxSize(0, 0), wxALIGN_CENTRE_HORIZONTAL);
-        grid->Add(boxes[i], 0, wxEXPAND);
-        boxes[i]->SetBackgroundColour(gray);
-        boxes[i]->SetFont(font); // setting font
-    }
+    addLetterBoxes();
 //                          guess button
     wxButton* buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"));
     Connect(wxID_APPLY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Game::OnGuess));
@@ -82,7 +75,11 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
     grid->Add(buttonGuess, 0, wxEXPAND);
     grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
-    grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
+    restart = new wxButton(this, 445, wxT("Restart"));
+    restart->Enable(false);
+    restart->Hide();
+    grid->Add(restart, 0, wxEXPAND);
+    Connect(445, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Game::OnRestart));
 
     sizer->Add(grid, 1, wxEXPAND);
     SetSizer(sizer);
@@ -173,11 +170,15 @@ void Game::OnGuess(wxCommandEvent& e)
        score = (maxScore - guessNumber * 5);
        if(player) dataBase.addPoints(score, player->getID());
        wxMessageBox("Correct! You get " + std::to_string(score) + " points!");
+       restart->Show();
+       restart->Enable();
        return;
    }
     guessNumber++;
     if (guessNumber >= guessCount) {
         wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
+        restart->Show();
+        restart->Enable();
         return;
     }
     e.Skip();
@@ -214,4 +215,23 @@ void Game::OnLogOut(wxCommandEvent& e){
     acc->Remove(444);
     acc->Prepend(wxID_LAST, wxT("Login"));
     acc->Prepend(wxID_FIRST, wxT("Register"));
+}
+void Game::OnRestart(wxCommandEvent& e) {
+    guessNumber = 0;
+    wordGen("zodziai.txt");
+    restart->Hide();
+    restart->Disable();
+    addLetterBoxes();
+}
+void Game::addLetterBoxes(){
+    wxFont font(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false); // font parameters
+    boxes = new wxStaticText * [lettersInWord * guessCount];
+        grid->Clear();
+    for (int i = 0; i < guessCount * lettersInWord; i++) {
+        boxes[i] = new wxStaticText(this, i, "", wxPoint(0, 0), wxSize(0, 0), wxALIGN_CENTRE_HORIZONTAL);
+        grid->Add(boxes[i], 0, wxEXPAND);
+        boxes[i]->SetBackgroundColour(gray);
+        boxes[i]->SetFont(font); // setting font
+    }
+    grid->Layout();
 }

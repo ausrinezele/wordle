@@ -57,12 +57,17 @@ private:
     wxTextCtrl* inputBox;
     wxStaticText** boxes;
 //------------guess button--------------------
+    wxButton* restart;
+
     void OnGuess(wxCommandEvent& e);
     void OnLogOut(wxCommandEvent& e);
+    void OnRestart(wxCommandEvent& e);
 
 //--------------------------------------------
     bool isWord(std::string guessedWord);
     void wordGen(std::string fvardas);
     bool letterInPos(int pos, char letter);
     bool letterExist(char letter);
+
+    void addLetterBoxes();
 };
