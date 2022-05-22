@@ -11,12 +11,13 @@ public:
 
 	void setNick(std::string &nick);
 	void setUserId(int uID);
-	void setScores(std::vector<int> &sc);
+	void setScore(int sc);
 
 	int getID() const;
+	std::string getNick() const;
 
 private:
 	std::string nickname;
 	int UserID;
-	std::vector<int> scores;
+	int score;
 };

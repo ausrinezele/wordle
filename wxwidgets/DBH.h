@@ -15,9 +15,9 @@ class DBH
 public:
 	DBH();
 	~DBH();
-	void runConnection();
 	void addUser(std::string name, std::string email, std::string password);
 	void addPoints(int points, int userID);
+	int findUser(std::string nickname, std::string password);
 
 	std::vector<std::string> getAllNames();
 	std::vector<std::string> getAllEmails();

@@ -27,7 +27,6 @@ Register::Register(const wxString& title) : wxDialog(NULL, wxID_ANY, title,
 }
 void Register::OnRegister(wxCommandEvent& e)
 {
-    wxMessageBox("register clicked");
     std::string username = name->GetValue().ToStdString();
     std::string useremail = email->GetValue().ToStdString();
     std::string userpassw = passw->GetValue().ToStdString();
