@@ -16,7 +16,7 @@ public:
 
 	int getID() const;
 	std::string getNick() const;
-	int getScore() const;
+	int getScore();
 
 private:
 	std::string nickname;

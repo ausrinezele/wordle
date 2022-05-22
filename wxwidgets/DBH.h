@@ -19,6 +19,7 @@ public:
 	void addUser(std::string name, std::string email, std::string password);
 	void addPoints(int points, int userID);
 	User* findUser(std::string nickname, std::string password);
+	std::vector<User> getLeaders();
 
 	std::vector<std::string> getAllNames();
 	std::vector<std::string> getAllEmails();

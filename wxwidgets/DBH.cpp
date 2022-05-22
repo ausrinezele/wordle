@@ -73,3 +73,13 @@ User* DBH::findUser(std::string nickname, std::string password) {
     }
     return nullptr;
 }
+std::vector<User> DBH::getLeaders() {
+    pstmt = con->prepareStatement("SELECT nickname, user_id, points FROM users ORDER BY points DESC limit 10");
+    res = pstmt->executeQuery();
+    std::vector<User> leaders;
+    while (res->next())
+    {
+        leaders.emplace_back(res->getString("nickname"), res->getInt("user_id"), res->getInt("points"));
+    }
+    return leaders;
+}

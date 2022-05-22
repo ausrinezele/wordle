@@ -29,6 +29,6 @@ int User::getID() const {
 std::string User::getNick() const {
 	return nickname;
 }
-int User::getScore() const {
+int User::getScore() {
 	return score;
 }
