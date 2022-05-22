@@ -7,9 +7,9 @@ Login::Login(const wxString& title) : wxDialog(NULL, wxID_ANY, title, wxDefaultP
     wxPanel* npanel = new wxPanel(this, wxID_ANY, wxPoint(25, 35), wxSize(100, 20));
     name = new wxTextCtrl(npanel, -1, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
 
-    wxStaticText* emailAddress = new wxStaticText(this, wxID_ANY, wxT("Password:"), wxPoint(15, 55));
+    wxStaticText* password = new wxStaticText(this, wxID_ANY, wxT("Password:"), wxPoint(15, 55));
     wxPanel* ppanel = new wxPanel(this, wxID_ANY, wxPoint(25, 75), wxSize(100, 20));
-    passw = new wxTextCtrl(ppanel, -1, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
+    passw = new wxTextCtrl(ppanel, -1, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT | wxTE_PASSWORD);
 
     wxButton* loginButton = new wxButton(this, wxID_EXIT, wxT("Login"), wxPoint(70, 120));
     Connect(wxID_EXIT, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Login::OnLogin));
@@ -27,7 +27,8 @@ void Login::OnLogin(wxCommandEvent& WXUNUSED(event))
         return;
     }
     logged = true;
-    wxMessageBox("user set");
+    wxMessageBox("Logged in as " + username);
+    Show(false);
 }
 bool Login::isLogged() {
     return logged;

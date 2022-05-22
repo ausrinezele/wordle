@@ -47,6 +47,7 @@ private:
     static std::mt19937 mt;
 
     int score = 0;
+    int totalScore = 0;
     int maxScore = 30;
 
     std::vector<std::string> wordList;
@@ -70,4 +71,8 @@ private:
     bool letterExist(char letter);
 
     void addLetterBoxes();
+
+    void ltrim(std::string& s);
+    void rtrim(std::string& s);
+    void trim(std::string& s);
 };

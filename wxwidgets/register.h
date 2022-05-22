@@ -1,6 +1,7 @@
 #pragma once
 #include <wx/wx.h>
 #include "DBH.h"
+#include <string>
 
 class Register : public wxDialog
 {
@@ -18,5 +19,5 @@ private:
 
     bool uniqueName(std::string name);
     bool uniqueEmail(std::string email);
-
+    bool corrEmail(std::string email);
 };

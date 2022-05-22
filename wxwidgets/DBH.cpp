@@ -28,7 +28,7 @@ void DBH::addUser(std::string name, std::string email, std::string password) {
     pstmt->setString(2, email);
     pstmt->setString(3, password);
     pstmt->execute();
-    wxMessageBox("new user set");
+    wxMessageBox("Registered!");
 }
 
 void DBH::addPoints(int points, int userID) {
@@ -36,7 +36,6 @@ void DBH::addPoints(int points, int userID) {
     pstmt->setInt(1, points);
     pstmt->setInt(2, userID);
     pstmt->execute();
-    wxMessageBox("points added");
 }
 
 std::vector<std::string> DBH::getAllNames() {

@@ -4,24 +4,6 @@ std::random_device Game::rd;
 
 std::mt19937 Game::mt(Game::rd());
 
-static inline void ltrim(std::string& s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
-        return !std::isspace(ch);
-        }));
-}
-
-// trim from end (in place)
-static inline void rtrim(std::string& s) {
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-        return !std::isspace(ch);
-        }).base(), s.end());
-}
-
-// trim from both ends (in place)
-static inline void trim(std::string& s) {
-    ltrim(s);
-    rtrim(s);
-}
 Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(240, 390))
 {
     wordGen("zodziai.txt"); //sugeneruoja zodi
@@ -120,23 +102,32 @@ void Game::OnLog(wxCommandEvent& WXUNUSED(event))
         player = sr->getloggedUser();
     }
     else wxMessageBox("User " + player->getNick() + " is logged in");
-    sr->Destroy();
-    acc->Remove(wxID_FIRST);
-    acc->Remove(wxID_LAST);
-    acc->Append(444, wxT("Log out"));
-    Connect(444, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLogOut));
+        sr->Destroy();
+    if (player) {
+        totalScore = player->getScore();
+        acc->Remove(wxID_FIRST);
+        acc->Remove(wxID_LAST);
+        acc->Append(444, wxT("Log out"));
+        Connect(444, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLogOut));
+    }
 
 }
 void Game::OnScore(wxCommandEvent& WXUNUSED(event))
 {
+    Score* sr = new Score(wxT("Score"));
+    
     if (player) {
-        Score* sr = new Score(wxT("Score"));
-        sr->setScore(player->getScore());
+        sr->setScore(totalScore);
         sr->setName(player->getNick());
         sr->ShowModal();
         sr->Destroy();
     }
-    else wxMessageBox("You must log in first");
+    else {
+        sr->setScore(totalScore);
+        sr->setName("Not logged in");
+        sr->ShowModal();
+        sr->Destroy();
+    }
 }
 //--------------guess_button------------------------------- reik keist obvs
 void Game::OnGuess(wxCommandEvent& e)
@@ -161,24 +152,32 @@ void Game::OnGuess(wxCommandEvent& e)
        if (letterInPos(i - lettersInWord * guessNumber, strWord[i - lettersInWord * guessNumber]))
        {
            boxes[i]->SetBackgroundColour(green);
-           if (guessNumber == 5) score++;
+           if (guessNumber == guessCount-1) score++;
        }
        else if (letterExist(strWord[i - lettersInWord * guessNumber])) boxes[i]->SetBackgroundColour(yellow);
+       grid->Layout();
+
    }
-    grid->Layout();
+   grid->Layout();
+
    if (strWord == corrWord) {               //reik paendint cia
-       score = (maxScore - guessNumber * 5);
+       score = (maxScore - guessNumber * guessCount);
        if(player) dataBase.addPoints(score, player->getID());
        wxMessageBox("Correct! You get " + std::to_string(score) + " points!");
        restart->Show();
        restart->Enable();
+       totalScore += score;
+       score = 0;
        return;
    }
     guessNumber++;
     if (guessNumber >= guessCount) {
+        if (player) dataBase.addPoints(score, player->getID());
         wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
         restart->Show();
         restart->Enable();
+        totalScore += score;
+        score = 0;
         return;
     }
     e.Skip();
@@ -212,6 +211,8 @@ bool Game::letterExist(char letter) {
 }
 void Game::OnLogOut(wxCommandEvent& e){
     player = nullptr;
+    totalScore = 0;
+    score = 0;
     acc->Remove(444);
     acc->Prepend(wxID_LAST, wxT("Login"));
     acc->Prepend(wxID_FIRST, wxT("Register"));
@@ -234,4 +235,22 @@ void Game::addLetterBoxes(){
         boxes[i]->SetFont(font); // setting font
     }
     grid->Layout();
+}
+void Game::ltrim(std::string& s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+        }));
+}
+
+// trim from end (in place)
+void Game::rtrim(std::string& s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+        }).base(), s.end());
+}
+
+// trim from both ends (in place)
+void Game::trim(std::string& s) {
+    ltrim(s);
+    rtrim(s);
 }
