@@ -26,14 +26,15 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 {
     wordGen("zodziai.txt"); //sugeneruoja zodi
     wxMessageBox(corrWord); //SPAUSDINA TEISINGA ZODI
+    std::cout << "test" << std:: endl;
     //SetIcon(wxIcon(wxT("web.xpm")));
     //----------menu items------------------------------------
     menubar = new wxMenuBar;
     file = new wxMenu;
     acc = new wxMenu;
-    
+
     acc->Append(wxID_FIRST, wxT("Register"));
-    acc->Append(wxID_LAST, wxT("Login"));
+    acc->Append(wxID_LAST, wxT("Login"));    
     acc->Append(wxID_FLOPPY, wxT("Check score"));
     file->AppendSubMenu(acc, wxT("Account"));
         
@@ -41,6 +42,8 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     file->Append(wxID_ABOUT, wxT("Leaderboard"));
     file->Append(wxID_EXIT, wxT("&Quit"));
     menubar->Append(file, wxT("&File"));
+    
+    
     SetMenuBar(menubar);
 
     Connect(wxID_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnRules));
@@ -121,6 +124,11 @@ void Game::OnLog(wxCommandEvent& WXUNUSED(event))
     }
     else wxMessageBox("User " + player->getNick() + " is logged in");
     sr->Destroy();
+    acc->Remove(wxID_FIRST);
+    acc->Remove(wxID_LAST);
+    acc->Append(444, wxT("Log out"));
+    Connect(444, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLogOut));
+
 }
 void Game::OnScore(wxCommandEvent& WXUNUSED(event))
 {
@@ -200,4 +208,10 @@ bool Game::letterExist(char letter) {
     for (int i = 0; i < corrWord.length(); i++)
         if (letter == corrWord[i]) return true;
     return false;
+}
+void Game::OnLogOut(wxCommandEvent& e){
+    player = nullptr;
+    acc->Remove(444);
+    acc->Prepend(wxID_LAST, wxT("Login"));
+    acc->Prepend(wxID_FIRST, wxT("Register"));
 }

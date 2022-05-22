@@ -29,16 +29,6 @@ void Login::OnLogin(wxCommandEvent& WXUNUSED(event))
     logged = true;
     wxMessageBox("user set");
 }
-void Login::OnBadInput(wxCommandEvent& WXUNUSED(event))
-{
-    wxMessageDialog* error = new wxMessageDialog(NULL, wxT("Incorrect name or password"), wxT("Error"), wxOK | wxICON_ERROR);
-    error->ShowModal();
-}
-void Login::OnGoodInput(wxCommandEvent& WXUNUSED(event))
-{
-    wxMessageDialog* okay = new wxMessageDialog(NULL, wxT("Welcome back!"), wxT("Success"), wxOK);
-    okay->ShowModal();
-}
 bool Login::isLogged() {
     return logged;
 }

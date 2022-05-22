@@ -6,7 +6,7 @@ DBH::DBH():driver(nullptr),con(nullptr),stmt(nullptr),pstmt(nullptr),res(nullptr
     try
     {
         driver = get_driver_instance();
-        con = driver->connect(server, username, password);
+        con = driver->connect(server, username, password); // prisiconnectina prie serverio
     }
     catch (sql::SQLException e)
     {
@@ -14,10 +14,7 @@ DBH::DBH():driver(nullptr),con(nullptr),stmt(nullptr),pstmt(nullptr),res(nullptr
         system("pause");
         exit(1);
     }
-
-    con->setSchema("sql11494207"); // sukuria conectiona
-
-    wxMessageBox("connected");
+    con->setSchema("sql11494207"); // sukuria connectiona i butent ta duombaze
 }
 
 DBH::~DBH()
@@ -26,7 +23,7 @@ DBH::~DBH()
     delete con;
 }
 void DBH::addUser(std::string name, std::string email, std::string password) {
-    pstmt = con->prepareStatement("INSERT INTO users (nickname, email, password) VALUES(?,?,?)");
+    pstmt = con->prepareStatement("INSERT INTO users (nickname, email, password) VALUES(?,?,?)"); // apsaugo nuo sql injectionu
     pstmt->setString(1, name);
     pstmt->setString(2, email);
     pstmt->setString(3, password);

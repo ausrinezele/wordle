@@ -57,7 +57,9 @@ private:
     wxTextCtrl* inputBox;
     wxStaticText** boxes;
 //------------guess button--------------------
-    void OnGuess(wxCommandEvent& event);
+    void OnGuess(wxCommandEvent& e);
+    void OnLogOut(wxCommandEvent& e);
+
 //--------------------------------------------
     bool isWord(std::string guessedWord);
     void wordGen(std::string fvardas);

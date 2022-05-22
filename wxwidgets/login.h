@@ -10,8 +10,6 @@ public:
 
 
     void OnLogin(wxCommandEvent& event);
-    void OnBadInput(wxCommandEvent& event);
-    void OnGoodInput(wxCommandEvent& event);
 
     bool isLogged();
     User* getloggedUser();

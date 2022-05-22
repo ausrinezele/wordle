@@ -10,7 +10,6 @@ Score::Score(const wxString& title) : wxDialog(NULL, wxID_ANY, title, wxDefaultP
 }
 void Score::setScore(int sc) {
     score->SetLabel(std::to_string(sc));
-    wxMessageBox("score label set to " + std::to_string(sc));
 }
 void Score::setName(std::string username) {
     name->SetLabel(username);
