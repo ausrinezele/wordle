@@ -120,16 +120,20 @@ void Game::OnLog(wxCommandEvent& WXUNUSED(event))
     if (!player) {
         sr->ShowModal();
         player = sr->getloggedUser();
-        sr->EndModal(0);
     }
     else wxMessageBox("User " + player->getNick() + " is logged in");
     sr->Destroy();
 }
 void Game::OnScore(wxCommandEvent& WXUNUSED(event))
 {
-    Score* sr = new Score(wxT("Score"));
-    sr->ShowModal();
-    sr->Destroy();
+    if (player) {
+        Score* sr = new Score(wxT("Score"));
+        sr->setScore(player->getScore());
+        sr->setName(player->getNick());
+        sr->ShowModal();
+        sr->Destroy();
+    }
+    else wxMessageBox("You must log in first");
 }
 //--------------guess_button------------------------------- reik keist obvs
 void Game::OnGuess(wxCommandEvent& e)
@@ -160,8 +164,8 @@ void Game::OnGuess(wxCommandEvent& e)
    }
     grid->Layout();
    if (strWord == corrWord) {               //reik paendint cia
-       score += (maxScore - guessNumber * 5);
-       if(!player) dataBase.addPoints(score, 7);
+       score = (maxScore - guessNumber * 5);
+       if(player) dataBase.addPoints(score, player->getID());
        wxMessageBox("Correct! You get " + std::to_string(score) + " points!");
        return;
    }

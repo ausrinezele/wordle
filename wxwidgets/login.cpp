@@ -21,12 +21,11 @@ void Login::OnLogin(wxCommandEvent& WXUNUSED(event))
 {
     std::string username = name->GetValue().ToStdString();
     std::string userpassw = passw->GetValue().ToStdString();
-    int uID = database.findUser(username, userpassw);
-    if (!uID) {
+    user = database.findUser(username, userpassw);
+    if (!user) {
         wxMessageBox("User does not exist");
         return;
     }
-    user = new User(username, uID);
     logged = true;
     wxMessageBox("user set");
 }

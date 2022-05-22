@@ -7,6 +7,7 @@ class User
 public:
 	User();
 	User(std::string nick, int uID);
+	User(std::string nick, int uID, int sc);
 	~User();
 
 	void setNick(std::string &nick);
@@ -15,6 +16,7 @@ public:
 
 	int getID() const;
 	std::string getNick() const;
+	int getScore() const;
 
 private:
 	std::string nickname;

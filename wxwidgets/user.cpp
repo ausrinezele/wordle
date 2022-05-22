@@ -6,6 +6,9 @@ User::User() : nickname(""), UserID(-1), score(0)
 User::User(std::string nick, int uID) : nickname(nick), UserID(uID), score(0)
 {
 }
+User::User(std::string nick, int uID, int sc):nickname(nick), UserID(uID), score(sc)
+{
+}
 User::~User()
 {
 }
@@ -25,4 +28,7 @@ int User::getID() const {
 }
 std::string User::getNick() const {
 	return nickname;
+}
+int User::getScore() const {
+	return score;
 }

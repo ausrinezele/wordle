@@ -8,6 +8,7 @@
 #include <cppconn/prepared_statement.h>
 
 #include <wx/wx.h>
+#include "user.h"
 
 
 class DBH
@@ -17,7 +18,7 @@ public:
 	~DBH();
 	void addUser(std::string name, std::string email, std::string password);
 	void addPoints(int points, int userID);
-	int findUser(std::string nickname, std::string password);
+	User* findUser(std::string nickname, std::string password);
 
 	std::vector<std::string> getAllNames();
 	std::vector<std::string> getAllEmails();
@@ -25,6 +26,7 @@ private:
 	const std::string server = "sql11.freemysqlhosting.net";
 	const std::string username = "sql11494207";
 	const std::string password = "2LwdPnYQla";
+
 	sql::Driver* driver;
 	sql::Connection* con;
 	sql::Statement* stmt;

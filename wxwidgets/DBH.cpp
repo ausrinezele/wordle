@@ -62,14 +62,14 @@ std::vector<std::string> DBH::getAllEmails(){
         temp.push_back(res->getString("email"));
     return temp;
 }
-int DBH::findUser(std::string nickname, std::string password) {
-    pstmt = con->prepareStatement("SELECT nickname, password, user_id FROM users");
+User* DBH::findUser(std::string nickname, std::string password) {
+    pstmt = con->prepareStatement("SELECT nickname, password, user_id, points FROM users");
     res = pstmt->executeQuery();
 
     while (res->next())
     {
         if (nickname == res->getString("nickname") && password == res->getString("password"))
-            return res->getInt("user_id");
+            return new User(nickname,res->getInt("user_id"), res->getInt("points"));
     }
-    return 0;
+    return nullptr;
 }
