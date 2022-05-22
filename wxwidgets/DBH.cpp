@@ -1,7 +1,7 @@
 #include "DBH.h"
 
 
-DBH::DBH()
+DBH::DBH():driver(nullptr),con(nullptr),stmt(nullptr),pstmt(nullptr),res(nullptr)
 {
     try
     {
@@ -62,4 +62,33 @@ void DBH::addUser(std::string name, std::string email, std::string password) {
     pstmt->setString(3, password);
     pstmt->execute();
     wxMessageBox("new user set");
+}
+
+void DBH::addPoints(int points, int userID) {
+    pstmt = con->prepareStatement("INSERT INTO user_points (points,user_id) VALUES(?,?)");
+    pstmt->setInt(1, points);
+    pstmt->setInt(2, userID);
+    pstmt->execute();
+    wxMessageBox("points added");
+}
+
+std::vector<std::string> DBH::getAllNames() {
+    pstmt = con->prepareStatement("SELECT nickname FROM users");
+    res = pstmt->executeQuery();
+
+    std::vector<std::string> temp;
+
+    while (res->next())
+        temp.push_back(res->getString("nickname"));
+    return temp;
+}
+std::vector<std::string> DBH::getAllEmails(){
+    pstmt = con->prepareStatement("SELECT email FROM users");
+    res = pstmt->executeQuery();
+
+    std::vector<std::string> temp;
+
+    while (res->next())
+        temp.push_back(res->getString("email"));
+    return temp;
 }

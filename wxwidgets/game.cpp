@@ -27,6 +27,8 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     wordGen("zodziai.txt"); //sugeneruoja zodi
     wxMessageBox(corrWord); //SPAUSDINA TEISINGA ZODI
     dataBase.runConnection();
+    std::vector<std::string> temp = dataBase.getAllNames();
+    wxMessageBox(std::to_string(temp.size()));
     //SetIcon(wxIcon(wxT("web.xpm")));
     //----------menu items------------------------------------
     menubar = new wxMenuBar;
@@ -155,6 +157,7 @@ void Game::OnGuess(wxCommandEvent& e)
     grid->Layout();
    if (strWord == corrWord) {               //reik paendint cia
        score += (maxScore - guessNumber * 5);
+       if(player) dataBase.addPoints(score, player->getID());
        wxMessageBox("Correct! You get " + std::to_string(score) + " points!");
        return;
    }

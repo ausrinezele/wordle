@@ -31,18 +31,36 @@ void Register::OnRegister(wxCommandEvent& e)
     std::string username = name->GetValue().ToStdString();
     std::string useremail = email->GetValue().ToStdString();
     std::string userpassw = passw->GetValue().ToStdString();
+    if (!uniqueName(username) || !uniqueEmail(useremail)) return;
     dataBase.addUser(username, useremail, userpassw);
     e.Skip();
 }
-void Register::OnBadInput(wxCommandEvent& WXUNUSED(event))
+void Register::OnBadInput(wxCommandEvent& e)
 {
-    wxMessageDialog* error = new wxMessageDialog(NULL,
-        wxT("Name or e-mail is already in use"), wxT("Error"), wxOK | wxICON_ERROR);
+    wxMessageDialog* error = new wxMessageDialog(NULL, wxT("Name or e-mail is already in use"), wxT("Error"), wxOK | wxICON_ERROR);
     error->ShowModal();
+    e.Skip();
 }
-void Register::OnGoodInput(wxCommandEvent& WXUNUSED(event))
+void Register::OnGoodInput(wxCommandEvent& e)
 {
-    wxMessageDialog* okay = new wxMessageDialog(NULL,
-        wxT("Welcome"), wxT("Success"), wxOK);
+    wxMessageDialog* okay = new wxMessageDialog(NULL, wxT("Welcome"), wxT("Success"), wxOK);
     okay->ShowModal();
+    e.Skip();
 }
+bool Register::uniqueName(std::string name) {
+    for(auto &el: dataBase.getAllNames())
+        if (el == name) {
+            wxMessageBox("Name already exits");
+            return false;
+        }
+    return true;
+}
+bool Register::uniqueEmail(std::string email) {
+    for (auto& el : dataBase.getAllNames())
+        if (el == email) {
+            wxMessageBox("Email already exits");
+            return false;
+        }
+    return true;
+}
+

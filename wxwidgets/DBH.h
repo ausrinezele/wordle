@@ -17,6 +17,10 @@ public:
 	~DBH();
 	void runConnection();
 	void addUser(std::string name, std::string email, std::string password);
+	void addPoints(int points, int userID);
+
+	std::vector<std::string> getAllNames();
+	std::vector<std::string> getAllEmails();
 private:
 	const std::string server = "sql11.freemysqlhosting.net";
 	const std::string username = "sql11494207";
@@ -25,6 +29,7 @@ private:
 	sql::Connection* con;
 	sql::Statement* stmt;
 	sql::PreparedStatement* pstmt;
+	sql::ResultSet* res;
 };
 
 

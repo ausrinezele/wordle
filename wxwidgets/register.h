@@ -8,11 +8,15 @@ public:
     Register(const wxString& title);
 
     void OnRegister(wxCommandEvent& e);
-    void OnBadInput(wxCommandEvent& event);
-    void OnGoodInput(wxCommandEvent& event);
+    void OnBadInput(wxCommandEvent& e);
+    void OnGoodInput(wxCommandEvent& e);
 private:
     wxTextCtrl* name;
     wxTextCtrl* email;
     wxTextCtrl* passw;
     DBH dataBase;
+
+    bool uniqueName(std::string name);
+    bool uniqueEmail(std::string email);
+
 };
