@@ -17,6 +17,7 @@ public:
 	DBH();
 	~DBH();
 	void addUser(std::string name, std::string email, std::string password);
+	void addWord(std::string word);
 	void addPoints(int points, int userID);
 	User* findUser(std::string nickname, std::string password);
 	std::vector<User> getLeaders();

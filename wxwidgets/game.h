@@ -14,6 +14,7 @@
 #include <random>
 #include "DBH.h"
 #include "user.h"
+#include "word.h"
 
 
 class Game : public wxFrame
@@ -34,6 +35,7 @@ private:
 
     DBH dataBase;
     User* player = nullptr;
+    Word word;
 
     wxMenu* acc;
     wxMenuBar* menubar;

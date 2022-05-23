@@ -53,9 +53,13 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     inputBox = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
     sizer->Add(inputBox, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
     grid = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
+
+
 ////                      letterboxes
 
     addLetterBoxes();
+///sudedam raides
+    word.addWordToDb();
 //                          guess button
     wxButton* buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"));
     Connect(wxID_APPLY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Game::OnGuess));

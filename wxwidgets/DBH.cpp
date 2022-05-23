@@ -79,3 +79,8 @@ std::vector<User> DBH::getLeaders() {
     }
     return leaders;
 }
+void DBH::addWord(std::string word) {
+    pstmt = con->prepareStatement("INSERT INTO wordSource (word) VALUES(?)"); // apsaugo nuo sql injectionu
+    pstmt->setString(1, word);
+    pstmt->execute();
+}
