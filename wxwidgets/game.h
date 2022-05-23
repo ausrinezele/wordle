@@ -27,6 +27,8 @@ public:
     void OnReg(wxCommandEvent& event);
     void OnLog(wxCommandEvent& event);
     void OnScore(wxCommandEvent& event);
+    void OnInternal(wxCommandEvent& event);
+    void OnExternal(wxCommandEvent& event);
     
 private:
 
@@ -36,6 +38,7 @@ private:
     wxMenu* acc;
     wxMenuBar* menubar;
     wxMenu* file;
+    wxMenu* source;
     const int lettersInWord = 5;
     const int guessCount = 6;
     int guessNumber = 0;
