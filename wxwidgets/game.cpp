@@ -1,4 +1,4 @@
-﻿#include "game.h"
+#include "game.h"
 
 std::random_device Game::rd;
 
@@ -14,12 +14,17 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     menubar = new wxMenuBar;
     file = new wxMenu;
     acc = new wxMenu;
+    source = new wxMenu;
 
     acc->Append(wxID_FIRST, wxT("Register"));
     acc->Append(wxID_LAST, wxT("Login"));    
     acc->Append(wxID_FLOPPY, wxT("Check score"));
     file->AppendSubMenu(acc, wxT("Account"));
-        
+
+    source->Append(wxID_UP, wxT("Internal"));
+    source->Append(wxID_YES, wxT("External"));
+    file->AppendSubMenu(source, wxT("Word source"));
+
     file->Append(wxID_INFO, wxT("Rules"));
     file->Append(wxID_ABOUT, wxT("Leaderboard"));
     file->Append(wxID_EXIT, wxT("&Quit"));
@@ -30,6 +35,8 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 
     Connect(wxID_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnRules));
     Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLeaderboard));
+    Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnInternal));
+    Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnExternal));
     Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnQuit));
     Connect(wxID_FIRST, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnReg));
     Connect(wxID_LAST, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLog));
@@ -46,7 +53,7 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     inputBox = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
     sizer->Add(inputBox, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
     grid = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
-////                      word 1
+////                      letterboxes
 
     addLetterBoxes();
 //                          guess button
@@ -71,7 +78,15 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     Centre();
 }
 
-//----------menu items--------------------------------- galimai reikės dar kažką pridėti
+//----------menu items--------------------------------- 
+void Game::OnInternal(wxCommandEvent& WXUNUSED(event))
+{
+    
+}
+void Game::OnExternal(wxCommandEvent& WXUNUSED(event))
+{
+    
+}
 void Game::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
     Close(true);
@@ -88,6 +103,7 @@ void Game::OnRules(wxCommandEvent& WXUNUSED(event))
     sp->ShowModal();
     sp->Destroy();
 }
+
 void Game::OnReg(wxCommandEvent& WXUNUSED(event))
 {
     Register* sr = new Register(wxT("Register"));
@@ -129,7 +145,7 @@ void Game::OnScore(wxCommandEvent& WXUNUSED(event))
         sr->Destroy();
     }
 }
-//--------------guess_button------------------------------- reik keist obvs
+//--------------guess_button------------------------------- 
 void Game::OnGuess(wxCommandEvent& e)
 {
    std::string strWord = inputBox->GetValue().ToStdString();
@@ -160,7 +176,7 @@ void Game::OnGuess(wxCommandEvent& e)
    }
    grid->Layout();
 
-   if (strWord == corrWord) {               //reik paendint cia
+   if (strWord == corrWord) {              
        score = (maxScore - guessNumber * guessCount);
        if(player) dataBase.addPoints(score, player->getID());
        wxMessageBox("Correct! You get " + std::to_string(score) + " points!");
@@ -173,7 +189,7 @@ void Game::OnGuess(wxCommandEvent& e)
     guessNumber++;
     if (guessNumber >= guessCount) {
         if (player) dataBase.addPoints(score, player->getID());
-        wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));         //cia irgi reikai endint nes pralosia
+        wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));       
         restart->Show();
         restart->Enable();
         totalScore += score;
