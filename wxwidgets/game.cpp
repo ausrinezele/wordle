@@ -6,9 +6,9 @@ std::mt19937 Game::mt(Game::rd());
 
 Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(240, 390))
 {
-    wordGen("zodziai.txt"); //sugeneruoja zodi
+    //addWordsToDB("zodziai.txt");
+    wordGen(); //sugeneruoja zodi
     wxMessageBox(corrWord); //SPAUSDINA TEISINGA ZODI
-    std::cout << "test" << std:: endl;
     //SetIcon(wxIcon(wxT("web.xpm")));
     //----------menu items------------------------------------
     menubar = new wxMenuBar;
@@ -59,7 +59,6 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 
     addLetterBoxes();
 ///sudedam raides
-    word.addWordToDb();
 //                          guess button
     wxButton* buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"));
     Connect(wxID_APPLY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Game::OnGuess));
@@ -207,16 +206,22 @@ bool Game::isWord(std::string guessedWord) {
         if (guessedWord == wordList[i]) return true;
     return false;
 }
-void Game::wordGen(std::string fvardas) {
-    std::ifstream fin(fvardas);
+void Game::readWordsFromFile(std::string fname) {
+    std::ifstream fin(fname);
     while (!fin.eof())
     {
         std::string temp;
         fin >> temp;
         trim(temp);
-        if(temp.length() != 0)
+        if (temp.length() != 0)
             wordList.push_back(temp);
     }
+}
+void Game::getWordsFromDB(){
+    
+}
+
+void Game::wordGen() {
     std::uniform_int_distribution<int> dist(0, wordList.size()-1);
     corrWord = wordList[dist(mt)];
 }
@@ -239,7 +244,7 @@ void Game::OnLogOut(wxCommandEvent& e){
 }
 void Game::OnRestart(wxCommandEvent& e) {
     guessNumber = 0;
-    wordGen("zodziai.txt");
+    wordGen();
     restart->Hide();
     restart->Disable();
     addLetterBoxes();
@@ -273,4 +278,17 @@ void Game::rtrim(std::string& s) {
 void Game::trim(std::string& s) {
     ltrim(s);
     rtrim(s);
+}
+void Game::addWordsToDB(std::string file_name) {
+    std::ifstream fin(file_name);
+
+    while (!fin.eof())
+    {
+        std::string temp;
+        fin >> temp;
+        trim(temp);
+        if (temp.length() != 0)
+            dataBase.addWord(temp);
+    }
+    wxMessageBox("words added");
 }

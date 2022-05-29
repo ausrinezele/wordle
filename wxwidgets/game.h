@@ -14,7 +14,7 @@
 #include <random>
 #include "DBH.h"
 #include "user.h"
-#include "word.h"
+//#include "word.h"
 
 
 class Game : public wxFrame
@@ -30,12 +30,14 @@ public:
     void OnScore(wxCommandEvent& event);
     void OnInternal(wxCommandEvent& event);
     void OnExternal(wxCommandEvent& event);
+
+    void addWordsToDB(std::string file_name);
     
 private:
 
     DBH dataBase;
     User* player = nullptr;
-    Word word;
+    //Word word;
 
     wxMenu* acc;
     wxMenuBar* menubar;
@@ -71,9 +73,15 @@ private:
 
 //--------------------------------------------
     bool isWord(std::string guessedWord);
-    void wordGen(std::string fvardas);
+    void wordGen();
     bool letterInPos(int pos, char letter);
     bool letterExist(char letter);
+
+    void readWordsFromFile(std::string fname);
+
+    void getWordsFromDB();
+
+
 
     void addLetterBoxes();
 

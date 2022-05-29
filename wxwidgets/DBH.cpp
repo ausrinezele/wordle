@@ -3,18 +3,16 @@
 
 DBH::DBH():driver(nullptr),con(nullptr),stmt(nullptr),pstmt(nullptr),res(nullptr)
 {
-    try
-    {
+    try{
         driver = get_driver_instance();
         con = driver->connect(server, username, password); // prisiconnectina prie serverio
+        con->setSchema("sql11496150"); // sukuria connectiona i butent ta duombaze
     }
     catch (sql::SQLException e)
     {
         std::cout << "Could not connect to server. Error message: " << e.what() << std::endl;
-        system("pause");
-        exit(1);
+        wxMessageBox("Playing offline");
     }
-    con->setSchema("sql11494207"); // sukuria connectiona i butent ta duombaze
 }
 
 DBH::~DBH()
@@ -79,8 +77,20 @@ std::vector<User> DBH::getLeaders() {
     }
     return leaders;
 }
+std::vector<std::string> DBH::getAllWords() {
+    pstmt = con->prepareStatement("SELECT word FROM wordSource");
+    res = pstmt->executeQuery();
+
+    std::vector<std::string> temp;
+
+    while (res->next())
+        temp.push_back(res->getString("word"));
+    return temp;
+}
+
 void DBH::addWord(std::string word) {
-    pstmt = con->prepareStatement("INSERT INTO wordSource (word) VALUES(?)"); // apsaugo nuo sql injectionu
+    pstmt = con->prepareStatement("INSERT INTO wordsSource (word, letCount) VALUES(?,?)"); // apsaugo nuo sql injectionu
     pstmt->setString(1, word);
+    pstmt->setString(2, std::to_string(word.length()));
     pstmt->execute();
 }
