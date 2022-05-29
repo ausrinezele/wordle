@@ -3,6 +3,8 @@
 #include <wx/wx.h>
 #include <wx/menu.h>
 #include <wx/event.h>
+#include <wx/filepicker.h>
+
 #include "rules.h"
 #include "leaderboard.h"
 #include "register.h"
@@ -10,6 +12,7 @@
 #include "score.h"
 #include <fstream>
 #include <vector>
+#include <string>
 
 #include <random>
 #include "DBH.h"
@@ -28,6 +31,8 @@ public:
     void OnLog(wxCommandEvent& event);
     void OnScore(wxCommandEvent& event);
     void OnInternal(wxCommandEvent& event);
+
+    void getDataFromFile(wxFileDirPickerEvent& event);
     void OnExternal(wxCommandEvent& event);
 
     void addWordsToDB(std::string file_name);
@@ -36,12 +41,16 @@ private:
 
     DBH dataBase;
     User* player = nullptr;
-    //Word word;
 
     wxMenu* acc;
     wxMenuBar* menubar;
     wxMenu* file;
+    
     wxMenu* source;
+    wxButton* addSource;
+    wxDialog* sourceFrame;
+    wxFilePickerCtrl* fileBox;
+
     const int lettersInWord = 5;
     const int guessCount = 6;
     int guessNumber = 0;
@@ -68,7 +77,9 @@ private:
     wxButton* buttonGuess;
 
     void OnGuess(wxCommandEvent& e);
+    
     void OnLogOut(wxCommandEvent& e);
+    
     void OnRestart(wxCommandEvent& e);
 
 //--------------------------------------------
@@ -80,8 +91,6 @@ private:
     void readWordsFromFile(std::string fname);
 
     void getWordsFromDB();
-
-
 
     void addLetterBoxes();
 

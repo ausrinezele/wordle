@@ -7,8 +7,6 @@ std::mt19937 Game::mt(Game::rd());
 Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(240, 390))
 {
     //addWordsToDB("zodziai.txt");
-    getWordsFromDB();
-    wordGen(); //sugeneruoja zodi
     //wxMessageBox(corrWord); //SPAUSDINA TEISINGA ZODI
     //SetIcon(wxIcon(wxT("web.xpm")));
     //----------menu items------------------------------------
@@ -43,6 +41,7 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     Connect(wxID_LAST, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLog));
     Connect(wxID_FLOPPY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnScore));
 
+
 //-----------------------grid---------------------------------
     black.Set(wxT("#333131"));
     green.Set(wxT("#008800"));
@@ -56,7 +55,6 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     grid = new wxGridSizer(guessCount, lettersInWord, 2,2);
 
 ////                      letterboxes
-
     addLetterBoxes();
 ///sudedam raides
 //                          guess button
@@ -74,6 +72,9 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     SetSizer(sizer);
     SetMinSize(wxSize(220, 390));
 
+    buttonGuess->Disable();
+    inputBox->Disable();
+
 //---------------------------------------------------------
     Centre();
 }
@@ -81,16 +82,60 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 //----------menu items--------------------------------- 
 void Game::OnInternal(wxCommandEvent& WXUNUSED(event))
 {
-    wxDialog* sourceFrame = new wxDialog(this, wxID_ANY, "Source", wxDefaultPosition, wxSize(150, 200));
-    wxTextCtrl* fileNameInput = new wxTextCtrl(sourceFrame, wxID_ANY, "", wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
-    sourceFrame->SetBackgroundColour("#DAD8CB");
-    sourceFrame->Center();
+    sourceFrame = new wxDialog(this, wxID_ANY, "Source", wxDefaultPosition, wxSize(300, 100));
+    wxBoxSizer* box = new wxBoxSizer(wxVERTICAL);
 
+    fileBox = new wxFilePickerCtrl(sourceFrame, wxID_FILE, wxEmptyString, wxFileSelectorPromptStr, wxFileSelectorDefaultWildcardStr, wxDefaultPosition, wxSize(280, wxDefaultCoord), wxFLP_DEFAULT_STYLE);
+    //addSource = new wxButton(sourceFrame, wxID_EXECUTE, wxT("Add source"), wxDefaultPosition, wxSize(80, 40));
+    sourceFrame->Connect(wxID_FILE, wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler(Game::getDataFromFile));
+        
+    box->Add(fileBox,0,wxCENTER);
+    //box->Add(addSource,0,wxCENTER);
+    sourceFrame->SetSizer(box);
+
+    sourceFrame->Center();
+    sourceFrame->Layout();
     sourceFrame->Show();
+}
+void Game::getDataFromFile(wxFileDirPickerEvent& event) {
+
+    wxMessageBox("test");
+   /* if (Game::wordList.size() != 0) {
+        wxMessageBox("wordList is not empty");
+        wxMessageBox(std::to_string(wordList.size()) + " " + std::to_string(wordList.capacity()));
+        wordList.clear();
+        wxMessageBox("test");
+        wxMessageBox(std::to_string(wordList.size()));
+        Game::inputBox->Enable();
+        Game::buttonGuess->Enable();
+        Game::sourceFrame->Show(false);
+        event.Skip();
+        wordGen();
+
+        return;
+    }
+    else {*/
+        std::string fname = event.GetPath().ToStdString();
+        readWordsFromFile(fname);
+        wxMessageBox("file read");
+        wxMessageBox(std::to_string(wordList.size()));
+        event.Skip();
+        wordGen();
+        return;
+    //}
+    wxMessageBox("Failed to get words");
+    event.Skip();
 }
 void Game::OnExternal(wxCommandEvent& WXUNUSED(event))
 {
-    
+    getWordsFromDB();
+    if (!wordList.empty()) {
+        inputBox->Enable();
+        buttonGuess->Enable();
+        wordGen();
+        return;
+    }
+    wxMessageBox("Failed to get words");
 }
 void Game::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
@@ -215,7 +260,10 @@ bool Game::isWord(std::string guessedWord) {
     return false;
 }
 void Game::readWordsFromFile(std::string fname) {
+    wxMessageBox("trying to open " + fname);
     std::ifstream fin(fname);
+    wxMessageBox("openned " + fname);
+
     while (!fin.eof())
     {
         std::string temp;
@@ -224,9 +272,12 @@ void Game::readWordsFromFile(std::string fname) {
         if (temp.length() != 0)
             wordList.push_back(temp);
     }
+    wxMessageBox("words are pushed");
 }
 void Game::getWordsFromDB(){
-    wordList = dataBase.getAllWords();
+    std::vector<std::string> temp = dataBase.getAllWords();
+    for (int i = 0; i < temp.size(); i++)
+        wordList.push_back(temp[i]);
 }
 
 void Game::wordGen() {
