@@ -14,7 +14,6 @@
 #include <random>
 #include "DBH.h"
 #include "user.h"
-//#include "word.h"
 
 
 class Game : public wxFrame
@@ -66,6 +65,7 @@ private:
     wxStaticText** boxes;
 //------------guess button--------------------
     wxButton* restart;
+    wxButton* buttonGuess;
 
     void OnGuess(wxCommandEvent& e);
     void OnLogOut(wxCommandEvent& e);

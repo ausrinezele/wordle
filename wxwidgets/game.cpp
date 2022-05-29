@@ -7,8 +7,9 @@ std::mt19937 Game::mt(Game::rd());
 Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(240, 390))
 {
     //addWordsToDB("zodziai.txt");
+    getWordsFromDB();
     wordGen(); //sugeneruoja zodi
-    wxMessageBox(corrWord); //SPAUSDINA TEISINGA ZODI
+    //wxMessageBox(corrWord); //SPAUSDINA TEISINGA ZODI
     //SetIcon(wxIcon(wxT("web.xpm")));
     //----------menu items------------------------------------
     menubar = new wxMenuBar;
@@ -35,8 +36,8 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 
     Connect(wxID_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnRules));
     Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLeaderboard));
-    Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnInternal));
-    Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnExternal));
+    Connect(wxID_UP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnInternal));
+    Connect(wxID_YES, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnExternal));
     Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnQuit));
     Connect(wxID_FIRST, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnReg));
     Connect(wxID_LAST, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Game::OnLog));
@@ -52,28 +53,24 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
     sizer = new wxBoxSizer(wxVERTICAL);
     inputBox = new wxTextCtrl(this, 999, wxT(""), wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
     sizer->Add(inputBox, 0, wxEXPAND | wxTOP | wxBOTTOM, 4);
-    grid = new wxGridSizer(guessCount+1, lettersInWord, 2,2);
-
+    grid = new wxGridSizer(guessCount, lettersInWord, 2,2);
 
 ////                      letterboxes
 
     addLetterBoxes();
 ///sudedam raides
 //                          guess button
-    wxButton* buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"));
+    buttonGuess = new wxButton(this, wxID_APPLY, wxT("Guess"),wxDefaultPosition,wxSize(80,40));
     Connect(wxID_APPLY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Game::OnGuess));
 
-    grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
-    grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
-    grid->Add(buttonGuess, 0, wxEXPAND);
-    grid->Add(new wxStaticText(this, -1, wxT("")), 0, wxEXPAND);
-    restart = new wxButton(this, 445, wxT("Restart"));
-    restart->Enable(false);
+    restart = new wxButton(this, 445, wxT("Restart"), wxDefaultPosition, wxSize(80, 40));
+    restart->Disable();
     restart->Hide();
-    grid->Add(restart, 0, wxEXPAND);
     Connect(445, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Game::OnRestart));
 
     sizer->Add(grid, 1, wxEXPAND);
+    sizer->Add(buttonGuess, 0, wxCENTER);
+    sizer->Add(restart, 0, wxCENTER);
     SetSizer(sizer);
     SetMinSize(wxSize(220, 390));
 
@@ -84,7 +81,12 @@ Game::Game(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosi
 //----------menu items--------------------------------- 
 void Game::OnInternal(wxCommandEvent& WXUNUSED(event))
 {
-    
+    wxDialog* sourceFrame = new wxDialog(this, wxID_ANY, "Source", wxDefaultPosition, wxSize(150, 200));
+    wxTextCtrl* fileNameInput = new wxTextCtrl(sourceFrame, wxID_ANY, "", wxPoint(-1, -1), wxSize(-1, -1), wxTE_LEFT);
+    sourceFrame->SetBackgroundColour("#DAD8CB");
+    sourceFrame->Center();
+
+    sourceFrame->Show();
 }
 void Game::OnExternal(wxCommandEvent& WXUNUSED(event))
 {
@@ -185,8 +187,11 @@ void Game::OnGuess(wxCommandEvent& e)
        wxMessageBox("Correct! You get " + std::to_string(score) + " points!");
        restart->Show();
        restart->Enable();
+       buttonGuess->Disable();
+       buttonGuess->Hide();
        totalScore += score;
        score = 0;
+       sizer->Layout();
        return;
    }
     guessNumber++;
@@ -195,8 +200,11 @@ void Game::OnGuess(wxCommandEvent& e)
         wxMessageBox("You lost!\nCorrect answer: " + corrWord +"\nPoints received : " + std::to_string(score));       
         restart->Show();
         restart->Enable();
+        buttonGuess->Disable();
+        buttonGuess->Hide();
         totalScore += score;
         score = 0;
+        sizer->Layout();
         return;
     }
     e.Skip();
@@ -218,7 +226,7 @@ void Game::readWordsFromFile(std::string fname) {
     }
 }
 void Game::getWordsFromDB(){
-    
+    wordList = dataBase.getAllWords();
 }
 
 void Game::wordGen() {
@@ -247,6 +255,8 @@ void Game::OnRestart(wxCommandEvent& e) {
     wordGen();
     restart->Hide();
     restart->Disable();
+    buttonGuess->Enable();
+    buttonGuess->Show();
     addLetterBoxes();
 }
 void Game::addLetterBoxes(){

@@ -78,7 +78,7 @@ std::vector<User> DBH::getLeaders() {
     return leaders;
 }
 std::vector<std::string> DBH::getAllWords() {
-    pstmt = con->prepareStatement("SELECT word FROM wordSource");
+    pstmt = con->prepareStatement("SELECT word FROM wordsSource");
     res = pstmt->executeQuery();
 
     std::vector<std::string> temp;
